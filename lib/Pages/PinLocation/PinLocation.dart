@@ -16,14 +16,13 @@ import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 
 class PinLocation extends StatefulWidget {
-
   final String apiKey = AppConfig.mapsApiKey;
   @override
   State<StatefulWidget> createState() => PinLocationState();
 }
 
 /// Place picker state
-class PinLocationState extends State<PinLocation>{
+class PinLocationState extends State<PinLocation> {
   TextEditingController yourAddress = TextEditingController();
   TextEditingController yourLandmark = TextEditingController();
   TextEditingController yourTitle = TextEditingController();
@@ -31,11 +30,14 @@ class PinLocationState extends State<PinLocation>{
 
   /// Indicator for the selected location
   final Set<Marker> markers = Set();
+
   /// Result returned after user completes selection
   LocationResult locationResult;
+
   /// Overlay to display autocomplete suggestions
   OverlayEntry overlayEntry;
   List<NearbyPlace> nearbyPlaces = List();
+
   /// Session token required for autocomplete API call
   String sessionToken = Uuid().generateV4();
   GlobalKey appBarKey = GlobalKey();
@@ -45,7 +47,6 @@ class PinLocationState extends State<PinLocation>{
   Timer debouncer;
   bool hasSearchEntry = false;
   String selectedAddress;
-
 
   // constructor
   PinLocationState();
@@ -64,24 +65,21 @@ class PinLocationState extends State<PinLocation>{
   @override
   void initState() {
     super.initState();
-    if(AppConfig.currentPosition != null ){
+    if (AppConfig.currentPosition != null) {
       markers.add(Marker(
-        position: LatLng(AppConfig.currentPosition.latitude, AppConfig.currentPosition.longitude),
+        position: LatLng(AppConfig.currentPosition.latitude,
+            AppConfig.currentPosition.longitude),
         markerId: MarkerId("selected-location"),
-      )
-      );
+      ));
     }
-    if(AppConfig.currentAddress != null){
+    if (AppConfig.currentAddress != null) {
       yourAddress.value = TextEditingValue(text: AppConfig.currentAddress);
     }
-    if(AppConfig.landMark != null){
+    if (AppConfig.landMark != null) {
       yourLandmark.value = TextEditingValue(text: AppConfig.landMark);
     }
     this.editController.addListener(this.onSearchInputChange);
-
   }
-
-
 
   @override
   void dispose() {
@@ -91,22 +89,25 @@ class PinLocationState extends State<PinLocation>{
 
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     ScreenUtil().allowFontScaling = false;
-    var mapHeight = (MediaQuery.of(context).size.height - (100 + kBottomNavigationBarHeight + AppBar().preferredSize.height));
+    var mapHeight = (MediaQuery.of(context).size.height -
+        (100 + kBottomNavigationBarHeight + AppBar().preferredSize.height));
     return GestureDetector(
-        onTap: (){
+        onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
         child: Scaffold(
-
           backgroundColor: Colors.white,
-          resizeToAvoidBottomPadding: true,
           appBar: AppBar(
             key: this.appBarKey,
-            title: Text('Set your location',textScaleFactor: 1.0, style: TextStyle(fontFamily: 'Product Sans', color: Colors.blueGrey)),
+            title: Text('Set your location',
+                textScaleFactor: 1.0,
+                style: TextStyle(
+                    fontFamily: 'Product Sans', color: Colors.blueGrey)),
             //centerTitle: true,
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(
@@ -116,89 +117,103 @@ class PinLocationState extends State<PinLocation>{
           body: Stack(
             children: <Widget>[
               SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.80 - AppBar().preferredSize.height,
-                  child: ShowMap()
-              ),
+                  height: MediaQuery.of(context).size.height * 0.80 -
+                      AppBar().preferredSize.height,
+                  child: ShowMap()),
               searchInputCustom(),
 
-                  Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Container(color: Colors.white,width: double.infinity,
-                          padding: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 225.0,top: 10.0),
-                          child: Text('Move pin to set new location ', textAlign: TextAlign.left,style: TextStyle(color: Colors.green,fontFamily: 'Product Sans',fontSize: 18.0))
-                      )
-                  ),
+              Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Container(
+                      color: Colors.white,
+                      width: double.infinity,
+                      padding: EdgeInsets.only(
+                          left: 20.0, right: 20.0, bottom: 225.0, top: 10.0),
+                      child: Text('Move pin to set new location ',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontFamily: 'Product Sans',
+                              fontSize: 18.0)))),
 
               Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(color: Colors.white,
+                  child: Container(
+                    color: Colors.white,
                     padding: EdgeInsets.only(bottom: 165.0),
-                    child:LandmarkBox(),
-                  )
-              ),
+                    child: LandmarkBox(),
+                  )),
               Align(
-                  alignment: Alignment.bottomCenter ,
-                  child: Container(color: Colors.white,
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                      color: Colors.white,
                       padding: EdgeInsets.only(bottom: 90.0),
-                      child:EditAddressBox()
-                  )
-              ),
-             // Align(alignment: Alignment.bottomLeft,child: Container(padding: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 65.0),child: Text('Or Pick from the following', textAlign: TextAlign.left,style: TextStyle(color: Colors.blueGrey,fontFamily: 'Product Sans',fontSize: 16.0)))),
+                      child: EditAddressBox())),
+              // Align(alignment: Alignment.bottomLeft,child: Container(padding: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 65.0),child: Text('Or Pick from the following', textAlign: TextAlign.left,style: TextStyle(color: Colors.blueGrey,fontFamily: 'Product Sans',fontSize: 16.0)))),
               Align(
-                  alignment: Alignment.bottomCenter ,child: Container(
-                padding: EdgeInsets.only(bottom: 0.0),
-                child: SizedBox(height: 60.0),
-              )),
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 0.0),
+                    child: SizedBox(height: 60.0),
+                  )),
               Align(
-                  alignment: Alignment.bottomCenter ,child: Container(
-                padding: EdgeInsets.only(bottom: 10.0),
-                child: showSavedAddresses(),
-              ))
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 10.0),
+                    child: showSavedAddresses(),
+                  ))
             ],
           ),
           bottomNavigationBar: ConfirmLocationButton(),
-        )
-    );
+        ));
   }
 
-  Widget ShowMap(){
-    try{
-
+  Widget ShowMap() {
+    try {
       return Stack(children: [
         GoogleMap(
           initialCameraPosition: CameraPosition(
-            target: LatLng(AppConfig.currentPosition.latitude, AppConfig.currentPosition.longitude),
+            target: LatLng(AppConfig.currentPosition.latitude,
+                AppConfig.currentPosition.longitude),
             zoom: 15,
           ),
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
-          padding: EdgeInsets.only(top:5.0,bottom: 40.0),
+          padding: EdgeInsets.only(top: 5.0, bottom: 40.0),
           onMapCreated: onMapCreated,
           onTap: (latLng) {
             clearOverlay();
             moveToLocation(latLng);
           },
-         markers: markers,
+          markers: markers,
         ),
-        Align(alignment: Alignment.bottomCenter,child: Container(
-            height: 40.0,
+        Align(
+            alignment: Alignment.bottomCenter,
             child: Container(
-                padding: EdgeInsets.all(10.0),
-                color: Colors.blue.shade50,
-                child: Center(
-                    child: Text('Move pin to set delivery location',textScaleFactor: 1.0, style: TextStyle(color: Colors.blue,fontSize: 15.0,fontFamily: 'Product Sans'))
-                )
-            )
-        )),
+                height: 40.0,
+                child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    color: Colors.blue.shade50,
+                    child: Center(
+                        child: Text('Move pin to set delivery location',
+                            textScaleFactor: 1.0,
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 15.0,
+                                fontFamily: 'Product Sans')))))),
         searchInputCustom(),
       ]);
-    }
-    catch(err){
+    } catch (err) {
       print(err.toString());
-      return Center(child: Text('Error while loading map',textScaleFactor: 1.0, style: TextStyle(color: Colors.red, fontSize: 20.0,fontFamily: 'Product Sans')));
+      return Center(
+          child: Text('Error while loading map',
+              textScaleFactor: 1.0,
+              style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 20.0,
+                  fontFamily: 'Product Sans')));
     }
   }
-
 
   /// Hides the autocomplete overlay
   void clearOverlay() {
@@ -235,7 +250,7 @@ class PinLocationState extends State<PinLocation>{
     final size = renderBox.size;
 
     final RenderBox appBarBox =
-    this.appBarKey.currentContext.findRenderObject();
+        this.appBarKey.currentContext.findRenderObject();
 
     this.overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -254,7 +269,7 @@ class PinLocationState extends State<PinLocation>{
                 SizedBox(width: 24),
                 Expanded(
                     child: Text("Finding place...",
-                        textScaleFactor: 1.0,style: TextStyle(fontSize: 16)))
+                        textScaleFactor: 1.0, style: TextStyle(fontSize: 16)))
               ],
             ),
           ),
@@ -356,7 +371,7 @@ class PinLocationState extends State<PinLocation>{
     Size size = renderBox.size;
 
     final RenderBox appBarBox =
-    this.appBarKey.currentContext.findRenderObject();
+        this.appBarKey.currentContext.findRenderObject();
 
     clearOverlay();
 
@@ -458,17 +473,13 @@ class PinLocationState extends State<PinLocation>{
 
       final result = responseJson['results'][0];
 
-      print('address result --- '+result.toString());
+      print('address result --- ' + result.toString());
 
       setState(() {
-
-        if(result != null && result['formatted_address'] != null){
+        if (result != null && result['formatted_address'] != null) {
           print('new address detected');
           yourAddress.text = result['formatted_address'].toString();
         }
-
-
-
 
         String name,
             locality,
@@ -561,12 +572,12 @@ class PinLocationState extends State<PinLocation>{
     setMarker(latLng);
 
     reverseGeocodeLatLng(latLng);
-
   }
 
   void moveToCurrentUserLocation() {
     if (AppConfig.currentPosition != null) {
-      moveToLocation(LatLng(AppConfig.currentPosition.latitude, AppConfig.currentPosition.longitude));
+      moveToLocation(LatLng(AppConfig.currentPosition.latitude,
+          AppConfig.currentPosition.longitude));
       return;
     }
 
@@ -579,26 +590,32 @@ class PinLocationState extends State<PinLocation>{
     });
   }
 
-
-  Widget searchInputCustom(){
+  Widget searchInputCustom() {
     return Container(
       margin: EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width * 0.80,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
-          boxShadow: [BoxShadow(
-            color: Colors.black26,
-            blurRadius: 2.0,
-          )]
-      ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 2.0,
+            )
+          ]),
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         children: <Widget>[
-          Container(padding: EdgeInsets.only(left: 10.0),child: Icon(Icons.search, color: Colors.blueGrey)),
+          Container(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Icon(Icons.search, color: Colors.blueGrey)),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(hintText: "Search your location", border: InputBorder.none,contentPadding: EdgeInsets.only(left: 20.0,top: 0.0),),
+              decoration: InputDecoration(
+                hintText: "Search your location",
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 20.0, top: 0.0),
+              ),
               controller: this.editController,
               onChanged: (value) {
                 setState(() {
@@ -610,7 +627,10 @@ class PinLocationState extends State<PinLocation>{
           SizedBox(width: 8),
           if (this.hasSearchEntry)
             GestureDetector(
-              child: Icon(Icons.clear, color: Colors.black45,),
+              child: Icon(
+                Icons.clear,
+                color: Colors.black45,
+              ),
               onTap: () {
                 this.editController.clear();
                 setState(() {
@@ -620,10 +640,8 @@ class PinLocationState extends State<PinLocation>{
             ),
         ],
       ),
-
     );
   }
-
 
   void onSearchInputChange() {
     print('onSearchInputChange called');
@@ -642,42 +660,39 @@ class PinLocationState extends State<PinLocation>{
     });
   }
 
-
-
-  Widget ConfirmLocationButton(){
+  Widget ConfirmLocationButton() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      constraints: const BoxConstraints(
-          maxWidth: 500
-      ),
+      constraints: const BoxConstraints(maxWidth: 500),
       child: RaisedButton(
         onPressed: () {
           FocusScope.of(context).unfocus();
           AppConfig.currentPosition = locationResult.latLng;
           AppConfig.currentAddress = yourAddress.text;
           AppConfig.landMark = yourLandmark.text;
-          if(yourLandmark.text.isEmpty){
-            GlobalActions.showToast_Error('Title Required', 'Please enter title of address', context);
+          if (yourLandmark.text.isEmpty) {
+            GlobalActions.showToast_Error(
+                'Title Required', 'Please enter title of address', context);
             return false;
           }
 
-          if(yourAddress.text.isEmpty){
-            GlobalActions.showToast_Error('Address Required', 'Please enter your address details', context);
+          if (yourAddress.text.isEmpty) {
+            GlobalActions.showToast_Error('Address Required',
+                'Please enter your address details', context);
             return false;
           }
 
-          if(locationResult != null){
-            if(locationResult.subLocalityLevel1.name != null){
+          if (locationResult != null) {
+            if (locationResult.subLocalityLevel1.name != null) {
               AppConfig.subLocality = locationResult.subLocalityLevel1.name;
               AppConfig.locality = locationResult.locality;
-            }
-            else if(locationResult.administrativeAreaLevel2.name != null){
+            } else if (locationResult.administrativeAreaLevel2.name != null) {
               AppConfig.subLocality = locationResult.locality;
               AppConfig.locality = locationResult.administrativeAreaLevel2.name;
-            }
-            else{
+            } else {
               print('else');
-              AppConfig.subLocality = locationResult.formattedAddress.split(',')[0];
+              AppConfig.subLocality =
+                  locationResult.formattedAddress.split(',')[0];
               AppConfig.locality = locationResult.locality;
             }
           }
@@ -685,19 +700,20 @@ class PinLocationState extends State<PinLocation>{
           Navigator.pushReplacementNamed(context, '/index');
         },
 
-
         color: Colors.green,
         //teal.shade300,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(14))),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Confirm Location',textScaleFactor: 1.0,
+                'Confirm Location',
+                textScaleFactor: 1.0,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white,fontSize: 18.0),
+                style: TextStyle(color: Colors.white, fontSize: 18.0),
               ),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -745,10 +761,10 @@ class PinLocationState extends State<PinLocation>{
               LandmarkBox(),
               EditAddressBox(),
               SizedBox(height: 5.0),
-              *//*Align(alignment: Alignment.centerLeft,child: Container(
+              */ /*Align(alignment: Alignment.centerLeft,child: Container(
                 padding: EdgeInsets.only(left: 20.0,right: 20.0),
                 child: Text('Landmark', textAlign: TextAlign.left,style: TextStyle(color: Colors.blueGrey,fontFamily: 'Product Sans',fontSize: 15.0))
-            )),*//*
+            )),*/ /*
 
               Align(alignment: Alignment.centerLeft,child: Container(padding: EdgeInsets.only(left: 20.0,right: 20.0),child: Text('Or Pick from the following',textScaleFactor: 1.0, textAlign: TextAlign.left,style: TextStyle(color: Colors.green,fontFamily: 'Product Sans',fontSize: 16.0)))),
               SizedBox(height: 60.0),
@@ -758,21 +774,18 @@ class PinLocationState extends State<PinLocation>{
     );
   }*/
 
-  Widget EditAddressBox(){
-
+  Widget EditAddressBox() {
     return Container(
       height: 75,
-      padding: EdgeInsets.only(top: 7.0,left: 20.0,right: 20.0,bottom: 7.0),
-      constraints: const BoxConstraints(
-          maxWidth: 500
-      ),
-      margin: const EdgeInsets.only(left: 0,right: 0),
+      padding: EdgeInsets.only(top: 7.0, left: 20.0, right: 20.0, bottom: 7.0),
+      constraints: const BoxConstraints(maxWidth: 500),
+      margin: const EdgeInsets.only(left: 0, right: 0),
       child: CupertinoTextField(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0,bottom: 10.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
         decoration: BoxDecoration(
             color: Colors.blueGrey.shade50,
-            borderRadius: const BorderRadius.all(Radius.circular(10))
-        ),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         controller: yourAddress,
         clearButtonMode: OverlayVisibilityMode.editing,
         keyboardType: TextInputType.multiline,
@@ -781,24 +794,20 @@ class PinLocationState extends State<PinLocation>{
         placeholder: 'Full Address',
       ),
     );
-
   }
 
-  Widget LandmarkBox(){
-
+  Widget LandmarkBox() {
     return Container(
       height: 55,
-      padding: EdgeInsets.only(top: 7.0,left: 20.0,right: 20.0,bottom: 7.0),
-      constraints: const BoxConstraints(
-          maxWidth: 500
-      ),
-      margin: const EdgeInsets.only(left: 0,right: 0),
+      padding: EdgeInsets.only(top: 7.0, left: 20.0, right: 20.0, bottom: 7.0),
+      constraints: const BoxConstraints(maxWidth: 500),
+      margin: const EdgeInsets.only(left: 0, right: 0),
       child: CupertinoTextField(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 11.0,bottom: 11.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 11.0, bottom: 11.0),
         decoration: BoxDecoration(
             color: Colors.blueGrey.shade50,
-            borderRadius: const BorderRadius.all(Radius.circular(10))
-        ),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         controller: yourLandmark,
         clearButtonMode: OverlayVisibilityMode.editing,
         keyboardType: TextInputType.multiline,
@@ -807,79 +816,107 @@ class PinLocationState extends State<PinLocation>{
         placeholder: 'Near Landmark',
       ),
     );
-
   }
 
-
-  Widget showSavedAddresses(){
-    try{
+  Widget showSavedAddresses() {
+    try {
       Text('Or Pic From The Saved Addresses');
-      CollectionReference allAddresses = FirebaseFirestore.instance.collection('Customer/'+AppConfig.userID+'/SavedAddresses');
+      CollectionReference allAddresses = FirebaseFirestore.instance
+          .collection('Customer/' + AppConfig.userID + '/SavedAddresses');
 
       return StreamBuilder<QuerySnapshot>(
         stream: allAddresses.snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong',textScaleFactor: 1.0,);
+            return Text(
+              'Something went wrong',
+              textScaleFactor: 1.0,
+            );
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
                 height: 300.0,
-                child: Center(child: CircularProgressIndicator())
-            );
+                child: Center(child: CircularProgressIndicator()));
           }
 
-          
-          if(snapshot.hasData && snapshot.data.docs.length > 0){
-            
+          if (snapshot.hasData && snapshot.data.docs.length > 0) {
             List<Widget> lst = new List<Widget>();
             snapshot.data.docs.forEach((dt) {
               lst.add(InkWell(
                 child: Container(
-                  height: 70.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: selectedAddress == dt.id ? Colors.green.shade50 : HexColor('#f1f1f1'),
-                    boxShadow: [BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 0.5,
-                    )]
-                  ),
-                  width: 200.0,
-                  //margin: EdgeInsets.all(5.0),
-                  child: Stack(children: [
-
-                    Align(alignment: Alignment.topRight,
-                      child: Container(
-                        width: 160.0,
-                        height: 70.0,
-                        padding: EdgeInsets.all(10.0),
-                        child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround,children: [
-                          Align(alignment: Alignment.topLeft, child: Text(dt['Title'],textScaleFactor: 1.0,overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.blueGrey, fontSize: 15.0, fontFamily: 'Product Sans', fontWeight: FontWeight.w600))),
-                          Align(alignment: Alignment.topLeft, child: Text(dt['Address'],textScaleFactor: 1.0,overflow: TextOverflow.ellipsis,maxLines: 2, style: TextStyle(color: Colors.blueGrey, fontSize: 10.0, fontFamily: 'Product Sans', fontWeight: FontWeight.w600)))
+                    height: 70.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: selectedAddress == dt.id
+                            ? Colors.green.shade50
+                            : HexColor('#f1f1f1'),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 0.5,
+                          )
                         ]),
+                    width: 200.0,
+                    //margin: EdgeInsets.all(5.0),
+                    child: Stack(children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          width: 160.0,
+                          height: 70.0,
+                          padding: EdgeInsets.all(10.0),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(dt['Title'],
+                                        textScaleFactor: 1.0,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.blueGrey,
+                                            fontSize: 15.0,
+                                            fontFamily: 'Product Sans',
+                                            fontWeight: FontWeight.w600))),
+                                Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(dt['Address'],
+                                        textScaleFactor: 1.0,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            color: Colors.blueGrey,
+                                            fontSize: 10.0,
+                                            fontFamily: 'Product Sans',
+                                            fontWeight: FontWeight.w600)))
+                              ]),
+                        ),
                       ),
-                    ),
-                    Align(alignment: Alignment.topLeft,
-                      child: Container(
-                        width: 40.0,
-                        height: 80.0,
-                        child: Icon(Icons.circle, color: selectedAddress == dt.id ? Colors.orange.shade100 : Colors.black12),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Container(
+                          width: 40.0,
+                          height: 80.0,
+                          child: Icon(Icons.circle,
+                              color: selectedAddress == dt.id
+                                  ? Colors.orange.shade100
+                                  : Colors.black12),
+                        ),
                       ),
-                    ),
-                  ])
-                ),onTap: (){
+                    ])),
+                onTap: () {
                   selectedAddress = dt.id;
                   yourAddress.text = dt['Address'];
                   yourLandmark.text = dt['Landmark'];
-                  if(dt.data().containsKey('Location')){
+                  if (dt.data().containsKey('Location')) {
                     clearOverlay();
-                    LatLng lc = new LatLng(dt['Location'].latitude , dt['Location'].longitude);
+                    LatLng lc = new LatLng(
+                        dt['Location'].latitude, dt['Location'].longitude);
                     moveToLocation(lc);
                   }
 
-                  setState(() { });
+                  setState(() {});
                 },
               ));
               lst.add(SizedBox(width: 20.0));
@@ -887,20 +924,16 @@ class PinLocationState extends State<PinLocation>{
             return SingleChildScrollView(
               padding: EdgeInsets.only(left: 20.0),
               scrollDirection: Axis.horizontal,
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start,children: lst),
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start, children: lst),
             );
-          }
-          else{
+          } else {
             return SizedBox();
           }
         },
       );
-    }
-    catch(err){
+    } catch (err) {
       print(err);
     }
   }
-
-
-
 }

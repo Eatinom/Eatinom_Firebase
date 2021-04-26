@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cashfree_pg/cashfree_pg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eatinom/DataNotifier/CartData.dart';
 import 'package:eatinom/DataNotifier/ChefData.dart';
@@ -10,11 +11,12 @@ import 'package:eatinom/Pages/PinLocation/PinLocation.dart';
 import 'package:eatinom/Pages/PinLocation/PinLocation2.dart';
 import 'package:eatinom/Util/GlobalActions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:randomizer/randomizer.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class Cart extends StatefulWidget {
   Cart({Key key, this.title, @required this.document, this.onchanged})
@@ -31,11 +33,11 @@ class CartPage extends State<Cart> {
   int dp = 0;
   List<DocumentSnapshot> finalItems = new List<DocumentSnapshot>();
   Razorpay _razorpay;
+  // Creating PayuMoneyFlutter Instance
   bool isLoading = false;
   int couponAmount = 0;
 
   TextEditingController couponController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -43,6 +45,49 @@ class CartPage extends State<Cart> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    // Setting up the payment details
+    // initPlatformState();
+    // setupPayment();
+  }
+
+  /*
+    "txnId": orderid,
+      "email": "pbrtechnologies@yahoo.com",
+      "amount": (finalPay / 100).toString(),
+      "phone": "9100466729",
+      "product": "Monthly",
+      "firstname": "Test Name",
+      "mkey": "fm2GZr",
+      "mid": "8070251"
+   */
+
+  Future<void> initPlatformState() async {
+    String platformVersion;
+
+    Map map = {
+      "txnId": "123456",
+      "email": "test@test.com",
+      "amount": "10.00",
+      "phone": "9876543210",
+      "product": "Monthly",
+      "firstname": "Test Name",
+      "mkey": "",
+      "mid": ""
+    };
+    try {
+      //  platformVersion = await Payumoney.paymentStart(map);
+    } on PlatformException {
+      platformVersion = 'Failed to start payment.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    /*setState(() {
+      _platformVersion = platformVersion;
+    });*/
   }
 
   @override
@@ -984,16 +1029,21 @@ class CartPage extends State<Cart> {
     }
   }
 
-  void openCheckout() async {
+  Future<void> openCheckout() async {
+    String platformVersion;
     setState(() {
       isLoading = true;
     });
     int finalPay =
         (totalPay * (5 / (100 + 5)) + totalPay - couponAmount + dp).ceil() *
             100;
-    String orderid = await generateOrderId(
-        'rzp_test_tFrGCbt37NG0qM', 'PMx9Y3oPmIi6Cs8AaHMkaW4v', finalPay);
+    /* String orderid = await generateOrderId(
+        'rzp_test_tFrGCbt37NG0qM', 'PMx9Y3oPmIi6Cs8AaHMkaW4v', finalPay);*/
     var randomizer = new Randomizer();
+    int otp = randomizer.getrandomnumber(3, 78);
+    String amount = (finalPay / 100).toString();
+    String orderid = await generateCashFreeOrderId(amount, otp.toString());
+    /* var randomizer = new Randomizer();
     int otp = randomizer.getrandomnumber(3, 78);
     var options = {
       'key': 'rzp_test_tFrGCbt37NG0qM',
@@ -1002,23 +1052,70 @@ class CartPage extends State<Cart> {
       'description': 'Food order online',
       'order_id': orderid,
       'otp': otp,
-      'prefill': {
-        'contact': '9100466729',
-        'email': 'pbrtechnologies@yahoo.com'
-      },
-      'external': {
-        'wallets': ['paytm', 'phonepe']
-      }
+      'prefill': {'contact': '9100466729', 'email': 'pbrtechnologies@yahoo.com'}
+    };*/
+
+    Map<String, dynamic> inputParams = {
+      "orderId": otp,
+      "orderAmount": amount,
+      "customerName": "Eatinom",
+      "orderNote": "Food order online",
+      "orderCurrency": "INR",
+      "appId": "11129924ddc7bad8892084e655992111",
+      "customerPhone": "9100466729",
+      "customerEmail": "pbrtechnologies@yahoo.com",
+      "stage": "PROD",
+      "tokenData": orderid,
+      "notifyUrl": "https://test.gocashfree.com/notify"
     };
 
+    CashfreePGSDK.doPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              setState(() {
+                if (key == "referenceId") {
+                  PlaceOrder(orderid, value);
+                }
+                isLoading = false;
+              });
+            }));
+    /* try {
+      //  _razorpay.open(options);
+
+    */ /*  CashfreePGSDK.doUPIPayment(inputParams)
+          .then((value) => value?.forEach((key, value) {
+                print("$key : $value");
+                //Do something with the result
+                setState(() {
+                  if (key == "referenceId") {
+                    PlaceOrder(orderid, value);
+                  }
+                  isLoading = false;
+                });
+              }));*/ /*
+
+      //  platformVersion = await Payumoney.paymentStart(map);
+    } on PlatformException {
+      platformVersion = 'Failed to start payment.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    */ /* setState(() {
+      _platformVersion = platformVersion;
+    });
+*/ /*
     try {
-      _razorpay.open(options);
+      // _razorpay.open(options);
       setState(() {
         isLoading = true;
       });
     } catch (e) {
       debugPrint('*****************' + e.toString());
-    }
+    }*/
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
@@ -1063,6 +1160,24 @@ class CartPage extends State<Cart> {
           'http.post error: statusCode= ${res.statusCode}---' + res.body);
     print('ORDER ID response => ${res.body}');
     return json.decode(res.body)['id'].toString();
+  }
+
+  Future<String> generateCashFreeOrderId(String amount, String orderId) async {
+    var headers = {
+      'content-type': 'application/json',
+      'X-Client-Id': "11129924ddc7bad8892084e655992111",
+      'X-Client-Secret': "775bea7942bb815ffc4474cee6230e3110398df3"
+    };
+//$amount
+    var data =
+        '{ "orderAmount": $amount, "orderCurrency": "INR", "orderId": $orderId }'; // as per my experience the receipt doesn't play any role in helping you generate a certain pattern in your Order ID!!
+    var res = await http.post('https://api.cashfree.com/api/v2/cftoken/order',
+        headers: headers, body: data);
+    if (res.statusCode != 200)
+      throw Exception(
+          'http.post error: statusCode= ${res.statusCode}---' + res.body);
+    print('ORDER ID response => ${res.body}');
+    return json.decode(res.body)['cftoken'].toString();
   }
 
   Widget couponCodeBox() {
@@ -1213,6 +1328,9 @@ class CartPage extends State<Cart> {
       couponAmount = 0;
     }
   }
+
+  Future<Map<dynamic, dynamic>> doPayment(Map<String, dynamic> inputParams,
+      String platformVersion, String orderId) {}
 
   /* Widget couponCodeBox(){
     return Container(

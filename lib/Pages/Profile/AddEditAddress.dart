@@ -15,7 +15,6 @@ import 'package:place_picker/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 
-
 class AddEditAddress extends StatefulWidget {
   AddEditAddress({Key key, this.address}) : super(key: key);
   final DocumentSnapshot address;
@@ -26,8 +25,7 @@ class AddEditAddress extends StatefulWidget {
 }
 
 /// Place picker state
-class AddEditAddressState extends State<AddEditAddress>{
-
+class AddEditAddressState extends State<AddEditAddress> {
   TextEditingController yourAddress = TextEditingController();
   TextEditingController yourLandmark = TextEditingController();
   TextEditingController yourTitle = TextEditingController();
@@ -62,10 +60,8 @@ class AddEditAddressState extends State<AddEditAddress>{
   bool hasSearchEntry = false;
   bool isSaving = false;
 
-
   // constructor
   AddEditAddressState();
-
 
   void onMapCreated(GoogleMapController controller) {
     this.mapController.complete(controller);
@@ -82,32 +78,29 @@ class AddEditAddressState extends State<AddEditAddress>{
   @override
   void initState() {
     super.initState();
-    if(AppConfig.currentPosition != null ){
+    if (AppConfig.currentPosition != null) {
       markers.add(Marker(
-        position: LatLng(AppConfig.currentPosition.latitude, AppConfig.currentPosition.longitude),
+        position: LatLng(AppConfig.currentPosition.latitude,
+            AppConfig.currentPosition.longitude),
         markerId: MarkerId("selected-location"),
       ));
     }
 
-    if(widget.address != null){
+    if (widget.address != null) {
       address = widget.address;
-      if(address.data().containsKey('Title')){
+      if (address.data().containsKey('Title')) {
         yourTitle.value = TextEditingValue(text: address['Title']);
       }
-   /*   if(address.data().containsKey('Landmark')){
+      /*   if(address.data().containsKey('Landmark')){
         yourLandmark.value = TextEditingValue(text: address['Landmark']);
       }*/
-      if(address.data().containsKey('Address')){
+      if (address.data().containsKey('Address')) {
         yourAddress.value = TextEditingValue(text: address['Address']);
       }
     }
 
-
     this.editController.addListener(this.onSearchInputChange);
-
   }
-
-
 
   @override
   void dispose() {
@@ -120,135 +113,146 @@ class AddEditAddressState extends State<AddEditAddress>{
 
   @override
   Widget build(BuildContext context) {
-
     ScreenUtil.init(context);
     ScreenUtil().allowFontScaling = false;
 
     return GestureDetector(
-        onTap: (){
+        onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
         child: Scaffold(
           backgroundColor: Colors.white,
-          resizeToAvoidBottomPadding: true,
           appBar: AppBar(
             key: this.appBarKey,
-            title: Text(address != null ? address['Title'] : 'New Address',textScaleFactor: 1.0, style: TextStyle(fontFamily: 'Product Sans', color: Colors.blueGrey)),
+            title: Text(address != null ? address['Title'] : 'New Address',
+                textScaleFactor: 1.0,
+                style: TextStyle(
+                    fontFamily: 'Product Sans', color: Colors.blueGrey)),
             //centerTitle: true,
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(
               color: Colors.blueGrey, //change your color here
             ),
             actions: [
-              address != null ? InkWell(
-                child: Container(
-                  padding: EdgeInsets.only(right: 20.0),
-                  child: Center(
-                    child: Text('Delete',textScaleFactor: 1.0, style: TextStyle(color: Colors.red, fontSize: 15.0, fontFamily: 'Product Sans'))
-                  )
-                ),
-                onTap: (){
-                  deleteAddress();
-                },
-              ): SizedBox()
+              address != null
+                  ? InkWell(
+                      child: Container(
+                          padding: EdgeInsets.only(right: 20.0),
+                          child: Center(
+                              child: Text('Delete',
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 15.0,
+                                      fontFamily: 'Product Sans')))),
+                      onTap: () {
+                        deleteAddress();
+                      },
+                    )
+                  : SizedBox()
             ],
           ),
           body: Stack(children: [
-
             SingleChildScrollView(
               child: Column(children: [
-
                 //Map
                 SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.40 - AppBar().preferredSize.height,
-                    child: ShowMap()
-                ),
+                    height: MediaQuery.of(context).size.height * 0.40 -
+                        AppBar().preferredSize.height,
+                    child: ShowMap()),
 
                 SizedBox(height: 10.0),
 
                 Align(
                     alignment: Alignment.topLeft,
-                    child: Container(color: Colors.white,width: double.infinity,
-                        padding: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 5.0,top: 10.0),
-                        child: Text('Title', textAlign: TextAlign.left,style: TextStyle(color: Colors.green,fontFamily: 'Product Sans',fontSize: 18.0))
-                    )
-                ),
+                    child: Container(
+                        color: Colors.white,
+                        width: double.infinity,
+                        padding: EdgeInsets.only(
+                            left: 20.0, right: 20.0, bottom: 5.0, top: 10.0),
+                        child: Text('Title',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontFamily: 'Product Sans',
+                                fontSize: 18.0)))),
 
                 Align(
                     alignment: Alignment.topLeft,
-                    child: Container(color: Colors.white,
-                      padding: EdgeInsets.only(bottom: 5.0,top: 5.0),
-                      child:TitleBox(),
-                    )
-                ),
+                    child: Container(
+                      color: Colors.white,
+                      padding: EdgeInsets.only(bottom: 5.0, top: 5.0),
+                      child: TitleBox(),
+                    )),
 
                 Align(
                     alignment: Alignment.topLeft,
-                    child: Container(color: Colors.white,width: double.infinity,
-                        padding: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 5.0,top: 10.0),
-                        child: Text('Address Info', textAlign: TextAlign.left,style: TextStyle(color: Colors.green,fontFamily: 'Product Sans',fontSize: 18.0))
-                    )
-                ),
+                    child: Container(
+                        color: Colors.white,
+                        width: double.infinity,
+                        padding: EdgeInsets.only(
+                            left: 20.0, right: 20.0, bottom: 5.0, top: 10.0),
+                        child: Text('Address Info',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontFamily: 'Product Sans',
+                                fontSize: 18.0)))),
 
                 Align(
                     alignment: Alignment.topLeft,
-                    child: Container(color: Colors.white,
-                      padding: EdgeInsets.only(bottom: 5.0,top: 5.0),
-                      child:LandmarkBox(),
-                    )
-                ),
+                    child: Container(
+                      color: Colors.white,
+                      padding: EdgeInsets.only(bottom: 5.0, top: 5.0),
+                      child: LandmarkBox(),
+                    )),
                 Align(
-                    alignment: Alignment.bottomCenter ,
-                    child: Container(color: Colors.white,
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                        color: Colors.white,
                         padding: EdgeInsets.only(bottom: 25.0),
-                        child:EditAddressBox()
-                    )
-                ),
-
+                        child: EditAddressBox())),
               ]),
             ),
-
-
-            isSaving ? Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Colors.black.withOpacity(0.4),
-                child: Center(
-                    child: Container(
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          //borderRadius: BorderRadius.circular(20),
-                            color: Colors.white.withOpacity(1),
-                            shape: BoxShape.circle,
-                            boxShadow: [BoxShadow(
-                                color: Colors.black45,
-                                blurRadius: 5.0,
-                                spreadRadius: 1.0
-                            )]
-                        ),
-                        height: 50.0,width: 50.0,
-                        child: CircularProgressIndicator()
-                    )
-                )
-            ): SizedBox(),
+            isSaving
+                ? Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    color: Colors.black.withOpacity(0.4),
+                    child: Center(
+                        child: Container(
+                            padding: EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                                //borderRadius: BorderRadius.circular(20),
+                                color: Colors.white.withOpacity(1),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black45,
+                                      blurRadius: 5.0,
+                                      spreadRadius: 1.0)
+                                ]),
+                            height: 50.0,
+                            width: 50.0,
+                            child: CircularProgressIndicator())))
+                : SizedBox(),
           ]),
           bottomNavigationBar: SaveButton(),
-        )
-    );
+        ));
   }
 
-  Widget ShowMap(){
-    try{
-
+  Widget ShowMap() {
+    try {
       return Stack(children: [
         GoogleMap(
           initialCameraPosition: CameraPosition(
-            target: LatLng(AppConfig.currentPosition.latitude, AppConfig.currentPosition.longitude),
+            target: LatLng(AppConfig.currentPosition.latitude,
+                AppConfig.currentPosition.longitude),
             zoom: 15,
           ),
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
-          padding: EdgeInsets.only(top:5.0,bottom: 40.0),
+          padding: EdgeInsets.only(top: 5.0, bottom: 40.0),
           onMapCreated: onMapCreated,
           onTap: (latLng) {
             clearOverlay();
@@ -256,25 +260,33 @@ class AddEditAddressState extends State<AddEditAddress>{
           },
           markers: markers,
         ),
-        Align(alignment: Alignment.bottomCenter,child: Container(
-            height: 35.0,
+        Align(
+            alignment: Alignment.bottomCenter,
             child: Container(
-                padding: EdgeInsets.all(0.0),
-                color: Colors.blue.shade50,
-                child: Center(
-                    child: FittedBox(child: Text('Move pin to set delivery location', style: TextStyle(color: Colors.blue,fontSize: 15.0,fontFamily: 'Product Sans')), fit: BoxFit.cover)
-                )
-            )
-        )),
+                height: 35.0,
+                child: Container(
+                    padding: EdgeInsets.all(0.0),
+                    color: Colors.blue.shade50,
+                    child: Center(
+                        child: FittedBox(
+                            child: Text('Move pin to set delivery location',
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Product Sans')),
+                            fit: BoxFit.cover))))),
         searchInputCustom(),
       ]);
-    }
-    catch(err){
+    } catch (err) {
       print(err.toString());
-      return Center(child: Text('Error while loading map', style: TextStyle(color: Colors.red, fontSize: 20.0,fontFamily: 'Product Sans')));
+      return Center(
+          child: Text('Error while loading map',
+              style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 20.0,
+                  fontFamily: 'Product Sans')));
     }
   }
-
 
   /// Hides the autocomplete overlay
   void clearOverlay() {
@@ -311,7 +323,7 @@ class AddEditAddressState extends State<AddEditAddress>{
     final size = renderBox.size;
 
     final RenderBox appBarBox =
-    this.appBarKey.currentContext.findRenderObject();
+        this.appBarKey.currentContext.findRenderObject();
 
     this.overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -432,7 +444,7 @@ class AddEditAddressState extends State<AddEditAddress>{
     Size size = renderBox.size;
 
     final RenderBox appBarBox =
-    this.appBarKey.currentContext.findRenderObject();
+        this.appBarKey.currentContext.findRenderObject();
 
     clearOverlay();
 
@@ -534,17 +546,13 @@ class AddEditAddressState extends State<AddEditAddress>{
 
       final result = responseJson['results'][0];
 
-      print('address result --- '+result.toString());
+      print('address result --- ' + result.toString());
 
       setState(() {
-
-        if(result != null && result['formatted_address'] != null){
+        if (result != null && result['formatted_address'] != null) {
           print('new address detected');
           yourAddress.text = result['formatted_address'].toString();
         }
-
-
-
 
         String name,
             locality,
@@ -637,12 +645,12 @@ class AddEditAddressState extends State<AddEditAddress>{
     setMarker(latLng);
 
     reverseGeocodeLatLng(latLng);
-
   }
 
   void moveToCurrentUserLocation() {
     if (AppConfig.currentPosition != null) {
-      moveToLocation(LatLng(AppConfig.currentPosition.latitude, AppConfig.currentPosition.longitude));
+      moveToLocation(LatLng(AppConfig.currentPosition.latitude,
+          AppConfig.currentPosition.longitude));
       return;
     }
 
@@ -655,26 +663,32 @@ class AddEditAddressState extends State<AddEditAddress>{
     });
   }
 
-
-  Widget searchInputCustom(){
+  Widget searchInputCustom() {
     return Container(
       margin: EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width * 0.80,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
-          boxShadow: [BoxShadow(
-            color: Colors.black26,
-            blurRadius: 2.0,
-          )]
-      ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 2.0,
+            )
+          ]),
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         children: <Widget>[
-          Container(padding: EdgeInsets.only(left: 10.0),child: Icon(Icons.search, color: Colors.blueGrey)),
+          Container(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Icon(Icons.search, color: Colors.blueGrey)),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(hintText: "Search your location", border: InputBorder.none,contentPadding: EdgeInsets.only(left: 20.0,top: 0.0),),
+              decoration: InputDecoration(
+                hintText: "Search your location",
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 20.0, top: 0.0),
+              ),
               controller: this.editController,
               onChanged: (value) {
                 setState(() {
@@ -686,7 +700,10 @@ class AddEditAddressState extends State<AddEditAddress>{
           SizedBox(width: 8),
           if (this.hasSearchEntry)
             GestureDetector(
-              child: Icon(Icons.clear, color: Colors.black45,),
+              child: Icon(
+                Icons.clear,
+                color: Colors.black45,
+              ),
               onTap: () {
                 this.editController.clear();
                 setState(() {
@@ -696,10 +713,8 @@ class AddEditAddressState extends State<AddEditAddress>{
             ),
         ],
       ),
-
     );
   }
-
 
   void onSearchInputChange() {
     print('onSearchInputChange called');
@@ -718,82 +733,86 @@ class AddEditAddressState extends State<AddEditAddress>{
     });
   }
 
-
-  Widget SaveButton(){
-
+  Widget SaveButton() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      constraints: const BoxConstraints(
-          maxWidth: 500
-      ),
+      constraints: const BoxConstraints(maxWidth: 500),
       child: RaisedButton(
         onPressed: () {
           FocusScope.of(context).unfocus();
-          if(address != null){
+          if (address != null) {
             updateAddress();
-          }else{
+          } else {
             saveAddress();
           }
-
         },
         color: Colors.green.shade300,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(14))),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           child: Text(
-                'Save',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white,fontSize: 18.0),
-              ),
+            'Save',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontSize: 18.0),
           ),
         ),
-
+      ),
     );
   }
 
-
-
-
-  Widget ActionsBlock(){
+  Widget ActionsBlock() {
     return Container(
-        padding: EdgeInsets.only(top: (MediaQuery.of(context).size.height * 0.50) + 0.0),
+        padding: EdgeInsets.only(
+            top: (MediaQuery.of(context).size.height * 0.50) + 0.0),
         //height: MediaQuery.of(context).size.height * 0.50,
         //child: SingleChildScrollView(
-        child:Container(
+        child: Container(
             padding: EdgeInsets.all(0.0),
             child: ListView(children: [
               SizedBox(height: 10.0),
-              Align(alignment: Alignment.centerLeft,child: Container(
-                  padding: EdgeInsets.only(left: 20.0,right: 20.0),
-                  child: Text('Your Address', textAlign: TextAlign.left,style: TextStyle(color: Colors.green,fontFamily: 'Product Sans',fontSize: 18.0))
-              )),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Text('Your Address',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontFamily: 'Product Sans',
+                              fontSize: 18.0)))),
               SizedBox(height: 5.0),
               LandmarkBox(),
               EditAddressBox(),
               SizedBox(height: 5.0),
-              Align(alignment: Alignment.centerLeft,child: Container(padding: EdgeInsets.only(left: 20.0,right: 20.0),child: Text('Or Pick from the following', textAlign: TextAlign.left,style: TextStyle(color: Colors.green,fontFamily: 'Product Sans',fontSize: 16.0)))),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Text('Or Pick from the following',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontFamily: 'Product Sans',
+                              fontSize: 16.0)))),
               SizedBox(height: 60.0),
-            ])
-        )
-      //)
-    );
+            ]))
+        //)
+        );
   }
 
-  Widget EditAddressBox(){
-
+  Widget EditAddressBox() {
     return Container(
       height: 150,
-      padding: EdgeInsets.only(top: 7.0,left: 20.0,right: 20.0,bottom: 7.0),
-      constraints: const BoxConstraints(
-          maxWidth: 500
-      ),
-      margin: const EdgeInsets.only(left: 0,right: 0),
+      padding: EdgeInsets.only(top: 7.0, left: 20.0, right: 20.0, bottom: 7.0),
+      constraints: const BoxConstraints(maxWidth: 500),
+      margin: const EdgeInsets.only(left: 0, right: 0),
       child: CupertinoTextField(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0,bottom: 10.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
         decoration: BoxDecoration(
             color: Colors.blueGrey.shade50,
-            borderRadius: const BorderRadius.all(Radius.circular(10))
-        ),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         controller: yourAddress,
         clearButtonMode: OverlayVisibilityMode.editing,
         keyboardType: TextInputType.multiline,
@@ -802,24 +821,20 @@ class AddEditAddressState extends State<AddEditAddress>{
         placeholder: 'Full Address',
       ),
     );
-
   }
 
-  Widget LandmarkBox(){
-
+  Widget LandmarkBox() {
     return Container(
       height: 60,
-      padding: EdgeInsets.only(top: 7.0,left: 20.0,right: 20.0,bottom: 7.0),
-      constraints: const BoxConstraints(
-          maxWidth: 500
-      ),
-      margin: const EdgeInsets.only(left: 0,right: 0),
+      padding: EdgeInsets.only(top: 7.0, left: 20.0, right: 20.0, bottom: 7.0),
+      constraints: const BoxConstraints(maxWidth: 500),
+      margin: const EdgeInsets.only(left: 0, right: 0),
       child: CupertinoTextField(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 11.0,bottom: 11.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 11.0, bottom: 11.0),
         decoration: BoxDecoration(
             color: Colors.blueGrey.shade50,
-            borderRadius: const BorderRadius.all(Radius.circular(10))
-        ),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         controller: yourLandmark,
         clearButtonMode: OverlayVisibilityMode.editing,
         keyboardType: TextInputType.multiline,
@@ -828,24 +843,20 @@ class AddEditAddressState extends State<AddEditAddress>{
         placeholder: 'Near Landmark',
       ),
     );
-
   }
 
-  Widget TitleBox(){
-
+  Widget TitleBox() {
     return Container(
       height: 60,
-      padding: EdgeInsets.only(top: 7.0,left: 20.0,right: 20.0,bottom: 7.0),
-      constraints: const BoxConstraints(
-          maxWidth: 500
-      ),
-      margin: const EdgeInsets.only(left: 0,right: 0),
+      padding: EdgeInsets.only(top: 7.0, left: 20.0, right: 20.0, bottom: 7.0),
+      constraints: const BoxConstraints(maxWidth: 500),
+      margin: const EdgeInsets.only(left: 0, right: 0),
       child: CupertinoTextField(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 11.0,bottom: 11.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 11.0, bottom: 11.0),
         decoration: BoxDecoration(
             color: Colors.blueGrey.shade50,
-            borderRadius: const BorderRadius.all(Radius.circular(10))
-        ),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         controller: yourTitle,
         clearButtonMode: OverlayVisibilityMode.editing,
         keyboardType: TextInputType.text,
@@ -854,55 +865,53 @@ class AddEditAddressState extends State<AddEditAddress>{
         placeholder: 'Title',
       ),
     );
-
   }
 
-
-  bool saveAddress(){
-    try{
-      if(yourTitle.text.isEmpty){
-        GlobalActions.showToast_Error('Title Required', 'Please enter title of address', context);
+  bool saveAddress() {
+    try {
+      if (yourTitle.text.isEmpty) {
+        GlobalActions.showToast_Error(
+            'Title Required', 'Please enter title of address', context);
         setState(() {
           isSaving = false;
         });
         return false;
       }
 
-      if(yourAddress.text.isEmpty){
-        GlobalActions.showToast_Error('Address Required', 'Please enter your address details', context);
+      if (yourAddress.text.isEmpty) {
+        GlobalActions.showToast_Error(
+            'Address Required', 'Please enter your address details', context);
         setState(() {
           isSaving = false;
         });
         return false;
       }
 
-      CollectionReference customer = AppConfig.firestore.collection('Customer/'+AppConfig.userID+'/SavedAddresses');
+      CollectionReference customer = AppConfig.firestore
+          .collection('Customer/' + AppConfig.userID + '/SavedAddresses');
 
       String Locality = '';
       String SubLocality = '';
       GeoPoint pt;
-      try
-      {
-        if(locationResult != null) {
+      try {
+        if (locationResult != null) {
           if (locationResult.subLocalityLevel1.name != null) {
             SubLocality = locationResult.subLocalityLevel1.name;
             Locality = locationResult.locality;
-          }
-          else if (locationResult.administrativeAreaLevel2.name != null) {
+          } else if (locationResult.administrativeAreaLevel2.name != null) {
             SubLocality = locationResult.locality;
             Locality = locationResult.administrativeAreaLevel2.name;
-          }
-          else {
+          } else {
             SubLocality = locationResult.formattedAddress.split(',')[0];
             Locality = locationResult.locality;
           }
 
-          pt = new GeoPoint(locationResult.latLng.latitude, locationResult.latLng.longitude);
-        }
-        else{
+          pt = new GeoPoint(
+              locationResult.latLng.latitude, locationResult.latLng.longitude);
+        } else {
           pt = new GeoPoint(0.0, 0.0);
         }
-      }catch(err){
+      } catch (err) {
         print(err);
       }
       customer.add({
@@ -913,64 +922,63 @@ class AddEditAddressState extends State<AddEditAddress>{
         'CreatedOn': DateTime.now(),
         'Sub_Locality': SubLocality,
         'Locality': Locality
-      })
-      .then((value){
+      }).then((value) {
         print("address added");
-        Navigator.pop(context,true);
-        GlobalActions.showToast_Sucess('Success', 'Address added successfully.', context);
-      })
-      .catchError((error) => print("issue while saving changes"));
-    }
-    catch(err){
-      GlobalActions.showToast_Error('Error', 'Error while saving changes to server', context);
+        Navigator.pop(context, true);
+        GlobalActions.showToast_Sucess(
+            'Success', 'Address added successfully.', context);
+      }).catchError((error) => print("issue while saving changes"));
+    } catch (err) {
+      GlobalActions.showToast_Error(
+          'Error', 'Error while saving changes to server', context);
     }
   }
 
-  bool updateAddress(){
-    try{
-      if(yourTitle.text.isEmpty){
-        GlobalActions.showToast_Error('Title Required', 'Please enter title of address', context);
+  bool updateAddress() {
+    try {
+      if (yourTitle.text.isEmpty) {
+        GlobalActions.showToast_Error(
+            'Title Required', 'Please enter title of address', context);
         setState(() {
           isSaving = false;
         });
         return false;
       }
 
-      if(yourAddress.text.isEmpty){
-        GlobalActions.showToast_Error('Address Required', 'Please enter your address details', context);
+      if (yourAddress.text.isEmpty) {
+        GlobalActions.showToast_Error(
+            'Address Required', 'Please enter your address details', context);
         setState(() {
           isSaving = false;
         });
         return false;
       }
 
-      CollectionReference customer = AppConfig.firestore.collection('Customer/'+AppConfig.userID+'/SavedAddresses');
+      CollectionReference customer = AppConfig.firestore
+          .collection('Customer/' + AppConfig.userID + '/SavedAddresses');
 
       String Locality = '';
       String SubLocality = '';
       GeoPoint pt;
-      try
-      {
-        if(locationResult != null) {
+      try {
+        if (locationResult != null) {
           if (locationResult.subLocalityLevel1.name != null) {
             SubLocality = locationResult.subLocalityLevel1.name;
             Locality = locationResult.locality;
-          }
-          else if (locationResult.administrativeAreaLevel2.name != null) {
+          } else if (locationResult.administrativeAreaLevel2.name != null) {
             SubLocality = locationResult.locality;
             Locality = locationResult.administrativeAreaLevel2.name;
-          }
-          else {
+          } else {
             SubLocality = locationResult.formattedAddress.split(',')[0];
             Locality = locationResult.locality;
           }
 
-          pt = new GeoPoint(locationResult.latLng.latitude, locationResult.latLng.longitude);
-        }
-        else{
+          pt = new GeoPoint(
+              locationResult.latLng.latitude, locationResult.latLng.longitude);
+        } else {
           pt = new GeoPoint(0.0, 0.0);
         }
-      }catch(err){
+      } catch (err) {
         print(err);
       }
 
@@ -982,29 +990,29 @@ class AddEditAddressState extends State<AddEditAddress>{
         'CreatedOn': DateTime.now(),
         'Sub_Locality': SubLocality,
         'Locality': Locality
-      }, SetOptions(merge: true))
-      .then((value){
+      }, SetOptions(merge: true)).then((value) {
         print("address updated");
-        Navigator.pop(context,true);
-        GlobalActions.showToast_Sucess('Success', 'Address updated successfully.', context);
-      })
-      .catchError((error) => print("issue while saving changes"));
-    }
-    catch(err){
-      GlobalActions.showToast_Error('Error', 'Error while saving changes to server', context);
+        Navigator.pop(context, true);
+        GlobalActions.showToast_Sucess(
+            'Success', 'Address updated successfully.', context);
+      }).catchError((error) => print("issue while saving changes"));
+    } catch (err) {
+      GlobalActions.showToast_Error(
+          'Error', 'Error while saving changes to server', context);
     }
   }
 
-  bool deleteAddress(){
-    try{
-      FirebaseFirestore.instance.collection("Customer/"+AppConfig.userID+'/SavedAddresses').doc(address.id).delete();
+  bool deleteAddress() {
+    try {
+      FirebaseFirestore.instance
+          .collection("Customer/" + AppConfig.userID + '/SavedAddresses')
+          .doc(address.id)
+          .delete();
       Navigator.pop(context, true);
-    }
-    catch(err){
+    } catch (err) {
       print(err);
-      GlobalActions.showToast_Error('Error', 'Issue in processing your request.', context);
+      GlobalActions.showToast_Error(
+          'Error', 'Issue in processing your request.', context);
     }
   }
-
-
 }

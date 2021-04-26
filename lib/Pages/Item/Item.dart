@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:eatinom/DataNotifier/CartData.dart';
-import 'package:eatinom/DataNotifier/ChefData.dart';
 import 'package:eatinom/Pages/App/AppConfig.dart';
 import 'package:eatinom/Pages/Cart/Cart.dart';
 import 'package:eatinom/Pages/Cart/CartHolder.dart';

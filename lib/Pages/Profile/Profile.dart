@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eatinom/Pages/App/AppConfig.dart';
 import 'package:eatinom/Pages/Profile/ClaimBonus.dart';
@@ -22,8 +21,7 @@ class Profile extends StatefulWidget {
   ProfilePage createState() => new ProfilePage();
 }
 
-class ProfilePage extends State<Profile>{
-
+class ProfilePage extends State<Profile> {
   String selectedProfilePic = 'ProfilePic1.jpg';
   TextEditingController ctrlFirstName = new TextEditingController();
   TextEditingController ctrlLastName = new TextEditingController();
@@ -32,9 +30,8 @@ class ProfilePage extends State<Profile>{
   TextEditingController ctrlDOB = new TextEditingController();
   DocumentSnapshot data;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
 
@@ -43,250 +40,297 @@ class ProfilePage extends State<Profile>{
     AppConfig.context = context;
     ScreenUtil.init(context);
     ScreenUtil().allowFontScaling = false;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
-      body: showData()
-    );
+    return Scaffold(resizeToAvoidBottomInset: false, body: showData());
   }
 
-  Widget showData(){
-
+  Widget showData() {
     return Container(
         child: SingleChildScrollView(
-          child: Column(children: [
+      child: Column(children: [
         //    profilePic(),
-            SizedBox(height: 20.0),
+        SizedBox(height: 20.0),
 
-            //general link
-            InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => General()));
-                },
-                child: Container(
-                    margin: EdgeInsets.all(10.0),
+        //general link
+        InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => General()));
+            },
+            child: Container(
+                margin: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: HexColor('#f1f1f1'),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 0.5,
+                      )
+                    ]),
+                child: ListTile(
+                  leading: Container(
+                    padding: EdgeInsets.all(7.0),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: HexColor('#f1f1f1'),
-                        boxShadow: [BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 0.5,
-                        )]
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                          padding: EdgeInsets.all(7.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blueGrey.shade50,
-                              boxShadow: [BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 5.0,
-                              )]
-                          ),
-                          child: Image.asset('assets/pro1.png', height: 24.0,width: 24.0),
-                      ),
-                      title: Text('General Profile',textScaleFactor: 1.0, style: TextStyle(color: Colors.black87,fontSize: 17.0,fontFamily: 'Product Sans', fontWeight: FontWeight.w500)),
-                      trailing: Image.asset('assets/pro5.png', height: 15.0,width: 15.0),
-                    )
-                )
-            ),
+                        shape: BoxShape.circle,
+                        color: Colors.blueGrey.shade50,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 5.0,
+                          )
+                        ]),
+                    child: Image.asset('assets/pro1.png',
+                        height: 24.0, width: 24.0),
+                  ),
+                  title: Text('General Profile',
+                      textScaleFactor: 1.0,
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 17.0,
+                          fontFamily: 'Product Sans',
+                          fontWeight: FontWeight.w500)),
+                  trailing:
+                      Image.asset('assets/pro5.png', height: 15.0, width: 15.0),
+                ))),
 
-
-            //Your Addresses link
-            InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => YourAddresses()));
-                },
-                child: Container(
-                    margin: EdgeInsets.all(10.0),
+        //Your Addresses link
+        InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => YourAddresses()));
+            },
+            child: Container(
+                margin: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: HexColor('#f1f1f1'),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 0.5,
+                      )
+                    ]),
+                child: ListTile(
+                  leading: Container(
+                    padding: EdgeInsets.all(7.0),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: HexColor('#f1f1f1'),
-                        boxShadow: [BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 0.5,
-                        )]
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                          padding: EdgeInsets.all(7.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blueGrey.shade50,
-                              boxShadow: [BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 5.0,
-                              )]
-                          ),
-                          child: Image.asset('assets/Location.png', height: 24.0,width: 24.0),
-                      ),
-                      title: Text('Your Addresses',textScaleFactor: 1.0, style: TextStyle(color: Colors.black87,fontSize: 17.0,fontFamily: 'Product Sans', fontWeight: FontWeight.w500)),
-                      trailing: Image.asset('assets/pro5.png', height: 15.0,width: 15.0),
-                    )
-                )
-            ),
+                        shape: BoxShape.circle,
+                        color: Colors.blueGrey.shade50,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 5.0,
+                          )
+                        ]),
+                    child: Image.asset('assets/Location.png',
+                        height: 24.0, width: 24.0),
+                  ),
+                  title: Text('Your Addresses',
+                      textScaleFactor: 1.0,
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 17.0,
+                          fontFamily: 'Product Sans',
+                          fontWeight: FontWeight.w500)),
+                  trailing:
+                      Image.asset('assets/pro5.png', height: 15.0, width: 15.0),
+                ))),
 
-
-            //Ratings Reviews link
-            InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewRating()));
-                },
-                child: Container(
-                    margin: EdgeInsets.all(10.0),
+        //Ratings Reviews link
+        InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ReviewRating()));
+            },
+            child: Container(
+                margin: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: HexColor('#f1f1f1'),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 0.5,
+                      )
+                    ]),
+                child: ListTile(
+                  leading: Container(
+                    padding: EdgeInsets.all(7.0),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: HexColor('#f1f1f1'),
-                        boxShadow: [BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 0.5,
-                        )]
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                          padding: EdgeInsets.all(7.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blueGrey.shade50,
-                              boxShadow: [BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 5.0,
-                              )]
-                          ),
-                          child: Image.asset('assets/pro4.png', height: 24.0,width: 24.0),
-                      ),
-                      title: Text('Rating & Reviews',textScaleFactor: 1.0, style: TextStyle(color: Colors.black87,fontSize: 17.0,fontFamily: 'Product Sans', fontWeight: FontWeight.w500)),
-                      trailing: Image.asset('assets/pro5.png', height: 15.0,width: 15.0),
-                    )
-                )
-            ),
+                        shape: BoxShape.circle,
+                        color: Colors.blueGrey.shade50,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 5.0,
+                          )
+                        ]),
+                    child: Image.asset('assets/pro4.png',
+                        height: 24.0, width: 24.0),
+                  ),
+                  title: Text('Rating & Reviews',
+                      textScaleFactor: 1.0,
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 17.0,
+                          fontFamily: 'Product Sans',
+                          fontWeight: FontWeight.w500)),
+                  trailing:
+                      Image.asset('assets/pro5.png', height: 15.0, width: 15.0),
+                ))),
 
-            //Claim Referal
-            InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ClaimBonus()));
-                },
-                child: Container(
-                    margin: EdgeInsets.all(10.0),
+        //Claim Referal
+        InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ClaimBonus()));
+            },
+            child: Container(
+                margin: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: HexColor('#f1f1f1'),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 0.5,
+                      )
+                    ]),
+                child: ListTile(
+                  leading: Container(
+                      padding: EdgeInsets.all(7.0),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blueGrey.shade50,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 5.0,
+                            )
+                          ]),
+                      child: Icon(Icons.location_pin,
+                          color: Colors.orange.shade200, size: 20.0)),
+                  title: Text('Claim Referal Bonus',
+                      textScaleFactor: 1.0,
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 17.0,
+                          fontFamily: 'Product Sans',
+                          fontWeight: FontWeight.w500)),
+                  trailing:
+                      Image.asset('assets/pro5.png', height: 15.0, width: 15.0),
+                ))),
+
+        //Refer Friend link
+        InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ReferFriend()));
+            },
+            child: Container(
+                margin: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: HexColor('#f1f1f1'),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 0.5,
+                      )
+                    ]),
+                child: ListTile(
+                  leading: Container(
+                    padding: EdgeInsets.all(7.0),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: HexColor('#f1f1f1'),
-                        boxShadow: [BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 0.5,
-                        )]
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                          padding: EdgeInsets.all(7.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blueGrey.shade50,
-                              boxShadow: [BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 5.0,
-                              )]
-                          ),
-                          child: Icon(Icons.location_pin, color: Colors.orange.shade200,size: 20.0)
-                      ),
-                      title: Text('Claim Referal Bonus',textScaleFactor: 1.0, style: TextStyle(color: Colors.black87,fontSize: 17.0,fontFamily: 'Product Sans', fontWeight: FontWeight.w500)),
-                      trailing: Image.asset('assets/pro5.png', height: 15.0,width: 15.0),
-                    )
-                )
-            ),
+                        shape: BoxShape.circle,
+                        color: Colors.blueGrey.shade50,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 5.0,
+                          )
+                        ]),
+                    child: Image.asset('assets/pro2.png',
+                        height: 24.0, width: 24.0),
+                  ),
+                  title: Text('Refer a Friend',
+                      textScaleFactor: 1.0,
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 17.0,
+                          fontFamily: 'Product Sans',
+                          fontWeight: FontWeight.w500)),
+                  trailing:
+                      Image.asset('assets/pro5.png', height: 15.0, width: 15.0),
+                ))),
 
-
-            //Refer Friend link
-            InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReferFriend()));
-                },
-                child: Container(
-                    margin: EdgeInsets.all(10.0),
+        //Settings link
+        InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AppSettings()));
+            },
+            child: Container(
+                margin: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: HexColor('#f1f1f1'),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 0.5,
+                      )
+                    ]),
+                child: ListTile(
+                  leading: Container(
+                    padding: EdgeInsets.all(7.0),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: HexColor('#f1f1f1'),
-                        boxShadow: [BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 0.5,
-                        )]
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                          padding: EdgeInsets.all(7.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blueGrey.shade50,
-                              boxShadow: [BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 5.0,
-                              )]
-                          ),
-                          child: Image.asset('assets/pro2.png', height: 24.0,width: 24.0),
-                      ),
-                      title: Text('Refer a Friend',textScaleFactor: 1.0, style: TextStyle(color: Colors.black87,fontSize: 17.0,fontFamily: 'Product Sans', fontWeight: FontWeight.w500)),
-                      trailing: Image.asset('assets/pro5.png', height: 15.0,width: 15.0),
-                    )
-                )
-            ),
+                        shape: BoxShape.circle,
+                        color: Colors.blueGrey.shade50,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 5.0,
+                          )
+                        ]),
+                    child: Image.asset('assets/pro3.png',
+                        height: 24.0, width: 24.0),
+                  ),
+                  title: Text('Settings',
+                      textScaleFactor: 1.0,
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 17.0,
+                          fontFamily: 'Product Sans',
+                          fontWeight: FontWeight.w500)),
+                  trailing:
+                      Image.asset('assets/pro5.png', height: 15.0, width: 15.0),
+                ))),
 
-            //Settings link
-            InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AppSettings()));
-                },
-                child: Container(
-                    margin: EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: HexColor('#f1f1f1'),
-                        boxShadow: [BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 0.5,
-                        )]
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                          padding: EdgeInsets.all(7.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blueGrey.shade50,
-                              boxShadow: [BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 5.0,
-                              )]
-                          ),
-                          child: Image.asset('assets/pro3.png', height: 24.0,width: 24.0),
-                      ),
-                      title: Text('Settings',textScaleFactor: 1.0, style: TextStyle(color: Colors.black87,fontSize: 17.0,fontFamily: 'Product Sans', fontWeight: FontWeight.w500)),
-                      trailing: Image.asset('assets/pro5.png', height: 15.0,width: 15.0),
-                    )
-                )
-            ),
-
-            SizedBox(height: 30.0,)
-
-          ]),
+        SizedBox(
+          height: 30.0,
         )
-    );
+      ]),
+    ));
   }
 
-
-  Widget profilePic(){
-    try{
+  Widget profilePic() {
+    try {
       return StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance.collection('Customer').doc(AppConfig.userID).snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        stream: FirebaseFirestore.instance
+            .collection('Customer')
+            .doc(AppConfig.userID)
+            .snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
           }
 
-          if(snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
                 height: 300.0,
-                child: Center(child: CircularProgressIndicator())
-            );
+                child: Center(child: CircularProgressIndicator()));
           }
 
           DocumentSnapshot dt = snapshot.data;
@@ -295,55 +339,58 @@ class ProfilePage extends State<Profile>{
             color: HexColor('#f1f1f1'),
             child: Center(
                 child: Stack(children: [
-                  Align(alignment: Alignment.center, child: Container(
+              Align(
+                  alignment: Alignment.center,
+                  child: Container(
                     width: 90.0,
                     height: 90.0,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        boxShadow: [BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 1.0
-                        )]
-                    ),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black26, blurRadius: 1.0)
+                        ]),
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
-                      backgroundImage: dt.data().containsKey('ProfilePic') ? AssetImage('assets/'+dt['ProfilePic']) : AssetImage('assets/'+selectedProfilePic),
+                      backgroundImage: dt.data().containsKey('ProfilePic')
+                          ? AssetImage('assets/' + dt['ProfilePic'])
+                          : AssetImage('assets/' + selectedProfilePic),
                     ),
                   )),
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                          height: 65.0,
-                          //padding: EdgeInsets.only(bottom: 25.0),
-                          child: RichText(textScaleFactor: 1.0,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                text: dt.data().containsKey('Full_Name') ? dt['Full_Name'] : 'Unknown',
-                                style: TextStyle(fontSize: 17.0,color: Colors.orange, fontWeight: FontWeight.w600, fontFamily: 'Product Sans'),
-                                children: <TextSpan>[
-                                  TextSpan(text: '\n'+dt['Phone_Number'], style: TextStyle(fontSize: 12.0,color: Colors.blueGrey,fontWeight: FontWeight.w400)),
-                                ],
-                              )
-                          )
-
-                      )
-                  )
-                ])
-            ),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                      height: 65.0,
+                      //padding: EdgeInsets.only(bottom: 25.0),
+                      child: RichText(
+                          textScaleFactor: 1.0,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            text: dt.data().containsKey('Full_Name')
+                                ? dt['Full_Name']
+                                : 'Unknown',
+                            style: TextStyle(
+                                fontSize: 17.0,
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Product Sans'),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: '\n' + dt['Phone_Number'],
+                                  style: TextStyle(
+                                      fontSize: 12.0,
+                                      color: Colors.blueGrey,
+                                      fontWeight: FontWeight.w400)),
+                            ],
+                          ))))
+            ])),
           );
         },
       );
-
-
-
-    }
-    catch(err){
+    } catch (err) {
       print(err.toString());
       return SizedBox();
     }
   }
-
-
 }
