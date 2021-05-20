@@ -61,6 +61,7 @@ dependencies:
   change_app_package_name: ^0.1.2
   randomizer: ^0.0.2
   fluttertoast: ^7.1.6
+  flutter_webview_plugin: ^0.3.10
 
 
 
@@ -129,6 +130,7 @@ flutter:
     - assets/search1.png
     - assets/order1.png
     - assets/profile1.png
+    - assets/termsconnditio.txt
 
   fonts:
     - family: Product Sans

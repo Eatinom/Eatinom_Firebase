@@ -401,20 +401,23 @@ class ChefPage extends State<Chef> {
 
   Widget AboutWidget() {
     return Container(
-        height: MediaQuery.of(context).size.height,
         child: Container(
             margin: EdgeInsets.only(left: 40.0),
             color: Colors.blueGrey.shade50,
-            child: Center(
-                child:
-                    //Text('About',textScaleFactor: 1.0,))
-                    // widget.chef.data().containsKey('Highlights') ? showHighlights(widget.chef['Highlights']) : SizedBox(width: 0.0,height: 0.0),
-                    Text(
-                        widget.chef['aboutChef'] != null
-                            ? widget.chef['aboutChef']
-                            : SizedBox(width: 0.0, height: 0.0),
-                        textScaleFactor: 1.0,
-                        style: TextStyle(color: Colors.blueGrey)))));
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10, top: 70),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Center(
+                  child: Text(
+                      widget.chef['aboutChef'] != null
+                          ? widget.chef['aboutChef']
+                          : SizedBox(width: 0.0, height: 0.0),
+                      textScaleFactor: 1.0,
+                      style: TextStyle(color: Colors.blueGrey)),
+                ),
+              ),
+            )));
   }
 
   Widget AvailableItems() {

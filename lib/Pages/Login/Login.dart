@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class Login extends StatefulWidget {
   Login_State createState() => Login_State();
@@ -34,12 +35,22 @@ class Login_State extends State<Login> {
   double scaleFactor;
   bool valuefirst = true;
   //bool valuesecond = true;
-
+  String data;
   @override
   void initState() {
     super.initState();
     phoneCodeCtrl.text = '+91';
     WidgetsBinding.instance.addPostFrameCallback((_) => openPhoneBlock());
+    getText();
+  }
+
+  void getText() async {
+    data = await getFileData();
+  }
+
+  /// Assumes the given path is a text-file-asset.
+  Future<String> getFileData() async {
+    return await rootBundle.loadString("assets/termsconnditio.txt");
   }
 
   @override
@@ -459,35 +470,22 @@ class Login_State extends State<Login> {
   }
 */
 
-  /*Widget _buildAboutText() {
-    return new RichText(
-      text: new TextSpan(
-        text: 'Terms & Conditions,'
-            '.\n\n',
-        style: const TextStyle(fontSize: 15.0, height: 1.3, color: Colors.black, fontFamily: 'Product Sans', fontWeight: FontWeight.w500),
-        children: <TextSpan>[
-          const TextSpan(text: 'Terms & Conditions'),
-          const TextSpan(
-            text: ' Terms & Conditions',
-          ),
-
-          const TextSpan(text: '.'),
-        ],
-      ),
-    );
-  }*/
+  Widget _buildAboutText() {
+    return SingleChildScrollView(
+        padding: new EdgeInsets.all(8.0),
+        child: Text(data,
+            textScaleFactor: 1.0,
+            style: TextStyle(fontFamily: 'Product Sans')));
+  }
 
   Widget _buildAboutDialog(BuildContext context) {
     return new AlertDialog(
       title: const Text('Terms & Conditions'),
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          //_buildAboutText(),
-          // _buildLogoAttribution(),
-        ],
-      ),
+      content: SingleChildScrollView(
+          padding: new EdgeInsets.all(8.0),
+          child: Text(data,
+              textScaleFactor: 1.0,
+              style: TextStyle(fontFamily: 'Product Sans'))),
       actions: <Widget>[
         new FlatButton(
           onPressed: () {

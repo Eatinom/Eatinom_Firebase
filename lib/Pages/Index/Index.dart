@@ -22,8 +22,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-
-
 class Index extends StatefulWidget {
   Index({Key key, this.page}) : super(key: key);
   final int page;
@@ -32,12 +30,10 @@ class Index extends StatefulWidget {
   IndexPage createState() => new IndexPage();
 }
 
-class IndexPage extends State<Index> with WidgetsBindingObserver
-{
+class IndexPage extends State<Index> with WidgetsBindingObserver {
   int _selectedIndex = 0;
 
   bool locationLoaded = true;
-
 
   @override
   void initState() {
@@ -48,7 +44,7 @@ class IndexPage extends State<Index> with WidgetsBindingObserver
       statusBarColor: Colors.black,
     ));
 
-    if(widget.page != null){
+    if (widget.page != null) {
       _selectedIndex = widget.page;
     }
     CustomerData.initialize();
@@ -56,10 +52,8 @@ class IndexPage extends State<Index> with WidgetsBindingObserver
     ChefData.initialize();
     ChefItemData.initialize();
     //WidgetsBinding.instance.addPostFrameCallback((_) => referalCodePopup(context));
-   // Future.delayed(const Duration(milliseconds: 1000), () => referalCodePopup(context));
+    // Future.delayed(const Duration(milliseconds: 1000), () => referalCodePopup(context));
   }
-
-
 
   @override
   void dispose() {
@@ -68,8 +62,6 @@ class IndexPage extends State<Index> with WidgetsBindingObserver
     CuisinesData.dispose();
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,21 +73,17 @@ class IndexPage extends State<Index> with WidgetsBindingObserver
     ScreenUtil().allowFontScaling = false;
 
     return WillPopScope(
-    //  onWillPop: () async => false,
+        //  onWillPop: () async => false,
         onWillPop: Helper.of(context).onWillPop,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: appBarWidget(),
-        body: Stack(children: [
-          bodyWidget(_selectedIndex),
-          NoInternet_Widget()
-        ]),
-        bottomNavigationBar: navigationBarWidget()
-    ));
+        child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: appBarWidget(),
+            body: Stack(
+                children: [bodyWidget(_selectedIndex), NoInternet_Widget()]),
+            bottomNavigationBar: navigationBarWidget()));
   }
 
-  Widget appBarWidget(){
-
+  Widget appBarWidget() {
     return AppBar(
       automaticallyImplyLeading: false,
       title: titleWidget(),
@@ -104,32 +92,49 @@ class IndexPage extends State<Index> with WidgetsBindingObserver
       actions: [
         Container(
             padding: EdgeInsets.all(0.00),
-          child: IconButton(
-              icon: Image.asset('assets/Notification.png', height: 18.0,width: 18.0),
-              onPressed: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications())); })
-        ),
+            child: IconButton(
+                icon: Image.asset('assets/Notification.png',
+                    height: 18.0, width: 18.0),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Notifications()));
+                })),
         CartIcon_Widget()
       ],
     );
-
   }
 
-  Widget titleWidget(){
-    if(_selectedIndex == 0){
+  Widget titleWidget() {
+    if (_selectedIndex == 0) {
       return curLocationWidget();
-    }
-    else if(_selectedIndex == 1){
-      return Text('Search', textScaleFactor: 1.0, style: TextStyle(color: Colors.blueGrey, fontSize: 20.0, fontFamily: 'Product Sans', fontWeight: FontWeight.w600));
-    }
-    else if(_selectedIndex == 2){
-      return Text('Orders', textScaleFactor: 1.0,style: TextStyle(color: Colors.blueGrey, fontSize: 20.0, fontFamily: 'Product Sans', fontWeight: FontWeight.w600));
-    }
-    else if(_selectedIndex == 3){
-      return Text('Profile', textScaleFactor: 1.0, style: TextStyle(color: Colors.blueGrey, fontSize: 20.0, fontFamily: 'Product Sans', fontWeight: FontWeight.w600));
+    } else if (_selectedIndex == 1) {
+      return Text('Search',
+          textScaleFactor: 1.0,
+          style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 20.0,
+              fontFamily: 'Product Sans',
+              fontWeight: FontWeight.w600));
+    } else if (_selectedIndex == 2) {
+      return Text('Orders',
+          textScaleFactor: 1.0,
+          style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 20.0,
+              fontFamily: 'Product Sans',
+              fontWeight: FontWeight.w600));
+    } else if (_selectedIndex == 3) {
+      return Text('Profile',
+          textScaleFactor: 1.0,
+          style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 20.0,
+              fontFamily: 'Product Sans',
+              fontWeight: FontWeight.w600));
     }
   }
 
-  Widget navigationBarWidget(){
+  Widget navigationBarWidget() {
     return Container(
       decoration: BoxDecoration(
         boxShadow: <BoxShadow>[
@@ -142,23 +147,27 @@ class IndexPage extends State<Index> with WidgetsBindingObserver
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Image.asset('assets/h1.png', height: 24.0,width: 24.0),
-            activeIcon: Image.asset('assets/home.png',height: 24.0,width: 24.0),
+            icon: Image.asset('assets/h1.png', height: 24.0, width: 24.0),
+            activeIcon:
+                Image.asset('assets/home.png', height: 24.0, width: 24.0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/search.png', height: 24.0,width: 24.0),
-            activeIcon: Image.asset('assets/search1.png', height: 24.0,width: 24.0),
+            icon: Image.asset('assets/search.png', height: 24.0, width: 24.0),
+            activeIcon:
+                Image.asset('assets/search1.png', height: 24.0, width: 24.0),
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/orders.png', height: 24.0,width: 24.0),
-            activeIcon: Image.asset('assets/order1.png', height: 24.0,width: 24.0),
+            icon: Image.asset('assets/orders.png', height: 24.0, width: 24.0),
+            activeIcon:
+                Image.asset('assets/order1.png', height: 24.0, width: 24.0),
             label: 'Orders',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/profile.png', height: 24.0,width: 24.0),
-            activeIcon: Image.asset('assets/profile1.png', height: 24.0,width: 24.0),
+            icon: Image.asset('assets/profile.png', height: 24.0, width: 24.0),
+            activeIcon:
+                Image.asset('assets/profile1.png', height: 24.0, width: 24.0),
             label: 'Profile',
           ),
         ],
@@ -177,103 +186,107 @@ class IndexPage extends State<Index> with WidgetsBindingObserver
     );
   }
 
-  Widget bodyWidget(int selectedIndex){
+  Widget bodyWidget(int selectedIndex) {
     Widget wgt;
-    if(selectedIndex == 0){
+    if (selectedIndex == 0) {
       wgt = Home();
-    }
-    else if(selectedIndex == 1){
+    } else if (selectedIndex == 1) {
       wgt = Search();
-    }
-    else if(selectedIndex == 2){
+    } else if (selectedIndex == 2) {
       wgt = Orders();
-    }
-    else if(selectedIndex == 3){
+    } else if (selectedIndex == 3) {
       wgt = Profile();
     }
 
     return wgt;
   }
 
-  Widget curLocationWidget(){
-
+  Widget curLocationWidget() {
     String area = '-';
     String city = '-';
-    if(AppConfig.subLocality != null){
+    if (AppConfig.subLocality != null) {
       area = AppConfig.subLocality;
-      if(area != null && area.length > 20){
-        area = area.substring(0,20)+'..';
+      if (area != null && area.length > 20) {
+        area = area.substring(0, 20) + '..';
       }
 
       city = AppConfig.locality;
-      if(city != null && city.length > 20){
-        city = city.substring(0,20)+'..';
+      if (city != null && city.length > 20) {
+        city = city.substring(0, 20) + '..';
       }
     }
 
-
     return InkWell(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.50,
-        child: Row(children: [
-          Padding(padding: EdgeInsets.only(left: 0.0,right: 10.0),child: Image.asset('assets/Location.png',height: 22.0,width: 22.0,)),
-          RichText(textScaleFactor: 1.0,overflow: TextOverflow.ellipsis,text: TextSpan(
-            text: area+'\n',
-            style: TextStyle(fontSize: 14.0,height: 1.3,color: Colors.black,fontFamily: 'Product Sans'),
-            children: <TextSpan>[
-              TextSpan(text: city, style: TextStyle(fontSize: 11.0,color: Colors.grey)),
-            ],
-          )
-        )
-      ])),
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PinLocation2()));
+          width: MediaQuery.of(context).size.width * 0.50,
+          child: Row(children: [
+            Padding(
+                padding: EdgeInsets.only(left: 0.0, right: 10.0),
+                child: Image.asset(
+                  'assets/Location.png',
+                  height: 22.0,
+                  width: 22.0,
+                )),
+            RichText(
+                textScaleFactor: 1.0,
+                overflow: TextOverflow.ellipsis,
+                text: TextSpan(
+                  text: area + '\n',
+                  style: TextStyle(
+                      fontSize: 14.0,
+                      height: 1.3,
+                      color: Colors.black,
+                      fontFamily: 'Product Sans'),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: city,
+                        style: TextStyle(fontSize: 11.0, color: Colors.grey)),
+                  ],
+                ))
+          ])),
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PinLocation2()));
       },
     );
   }
 
-  void referalCodePopup(BuildContext context) async{
-    try{
-      if(AppConfig.showReferalPopup){
-         FirebaseFirestore.instance.collection('Customer').doc(AppConfig.userID).snapshots().listen((customer) {
-          if(customer != null){
-            if(!customer.data().containsKey('FirstTime_Login') || customer['FirstTime_Login'] == true){
+  void referalCodePopup(BuildContext context) async {
+    try {
+      if (AppConfig.showReferalPopup) {
+        FirebaseFirestore.instance
+            .collection('Customer')
+            .doc(AppConfig.userID)
+            .snapshots()
+            .listen((customer) {
+          if (customer != null) {
+            if (!customer.data().containsKey('FirstTime_Login') ||
+                customer['FirstTime_Login'] == true) {
               print('referalCodePopup called - 2');
               showModalBottomSheet(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(50.0), topRight: Radius.circular(50.0)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50.0),
+                      topRight: Radius.circular(50.0)),
                 ),
                 isScrollControlled: true,
                 isDismissible: true,
                 context: context,
-                builder: (context){
+                builder: (context) {
                   AppConfig.showReferalPopup = false;
-
-
-
 
                   return Container(
                       height: 250.0,
                       color: Colors.cyan.shade50,
-                      child: Container()
-                  );
+                      child: Container());
                 },
               );
             }
           }
         });
       }
-
-
-
-
-
-    }
-    catch(err){
+    } catch (err) {
       print(err);
     }
   }
-
 }
-
-
