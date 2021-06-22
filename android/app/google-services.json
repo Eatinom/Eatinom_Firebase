@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "189794118156-2lu8csdrms6p6nnggliurd5cia1t8t9f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatinom.app.customer",
+            "certificate_hash": "06f819bf8cc8f0fefc122aaff7934da0335763f6"
+          }
+        },
+        {
+          "client_id": "189794118156-9963qon8un70m2puech2lvgt4107ua1l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatinom.app.customer",
+            "certificate_hash": "3ee8c7a9c551c23b04a9c0bae439466683e44264"
+          }
+        },
+        {
+          "client_id": "189794118156-nms5tana23rqtphn9bco9bb9nor39i01.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatinom.app.customer",
+            "certificate_hash": "065084bf0649228ad690acdcb66c0004db22a130"
+          }
+        },
+        {
           "client_id": "189794118156-qrbcs0slbdplsqv0d8uj1ccirnfrn9b8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -52,13 +76,103 @@
       },
       "oauth_client": [
         {
-          "client_id": "189794118156-lqjh0vld5t6saslro6no5jqq1tk1hma8.apps.googleusercontent.com",
+          "client_id": "189794118156-1r87323mseugn8r4fnclnkk72en21egs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatinom.app.eatinom",
+            "certificate_hash": "3ee8c7a9c551c23b04a9c0bae439466683e44264"
+          }
+        },
+        {
+          "client_id": "189794118156-50aojvr0vq23onsn9ieha9o4pbj2nis6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatinom.app.eatinom",
+            "certificate_hash": "065084bf0649228ad690acdcb66c0004db22a130"
+          }
+        },
+        {
+          "client_id": "189794118156-kms1eri97fjqahfa51a5cti0i9n7qpjp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatinom.app.eatinom",
+            "certificate_hash": "06f819bf8cc8f0fefc122aaff7934da0335763f6"
+          }
+        },
+        {
+          "client_id": "189794118156-tvj3bo5kbf8moc80l62fb8js7u8l46cg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.eatinom.app.eatinom",
             "certificate_hash": "74d308440e11fe3db560568a99682824ca47664e"
           }
         },
+        {
+          "client_id": "189794118156-qri6ks5poo2vql7rvbkp01kltoa813v6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3RNBqZV6P1Sjhreidq-0q-BEGrUE3ca0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "189794118156-qri6ks5poo2vql7rvbkp01kltoa813v6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:189794118156:android:d74fa0e7a288d5c7205c29",
+        "android_client_info": {
+          "package_name": "com.eatinom.eatinom.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "189794118156-kk4v22nhok2m2v0jhrolad4ap5mt4f0f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatinom.eatinom.app",
+            "certificate_hash": "06f819bf8cc8f0fefc122aaff7934da0335763f6"
+          }
+        },
+        {
+          "client_id": "189794118156-qri6ks5poo2vql7rvbkp01kltoa813v6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3RNBqZV6P1Sjhreidq-0q-BEGrUE3ca0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "189794118156-qri6ks5poo2vql7rvbkp01kltoa813v6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:189794118156:android:1748c95dcd8bb989205c29",
+        "android_client_info": {
+          "package_name": "com.food.eatinom"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "189794118156-qri6ks5poo2vql7rvbkp01kltoa813v6.apps.googleusercontent.com",
           "client_type": 3

@@ -1,4 +1,4 @@
-package com.eatinom.app.eatinom
+package com.food.eatinom
 
 import io.flutter.embedding.android.FlutterActivity
 

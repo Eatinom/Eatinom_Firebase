@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.eatinom.app.eatinom"
-    >
+    package="com.food.eatinom">
     <supports-screens
         android:largeScreens="true"
         android:normalScreens="true"
@@ -17,18 +16,16 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Permissions options for the `sms` group -->
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
+    <!--<uses-permission android:name="android.permission.SEND_SMS"/>-->
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH"/>
-    <uses-permission android:name="android.permission.RECEIVE_MMS"/>
     <uses-feature android:name="android.hardware.location.network" android:required="false" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false"  />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="com.google.android.c2dm.permission.SEND_SMS"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="com.eatinom.app.customer.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="com.food.eatinom.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
 
     <application
         android:name="io.flutter.app.FlutterApplication"
@@ -76,7 +73,7 @@
         <receiver android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver" android:permission="com.google.android.c2dm.permission.SEND" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVER"/>
-                <category android:name="com.eationom.com.eatinom"/>
+                <category android:name="com.food.eatinom"/>
             </intent-filter>
 
         </receiver>
